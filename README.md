@@ -12,13 +12,13 @@ call the mathpix API make a simple mathpix  snipping tool
 
 
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200401113113292.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDk4NDY2NA==,size_16,color_FFFFFF,t_70)
+<img src="https://img-blog.csdnimg.cn/20200401113113292.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDk4NDY2NA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" style="zoom:33%;" />
 
 <br>
 
 animation
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200401111712522.gif)
+<img src="https://img-blog.csdnimg.cn/20200401111712522.gif" alt="在这里插入图片描述" style="zoom:33%;" />
 
 ### how to use it ?
 
