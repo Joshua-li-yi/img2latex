@@ -31,3 +31,8 @@ clipboard to latex and show it in three forms
 + the image on your clipboard can be showed on the display board
 + `ALT +C` or push the copy button on the right can copy the latex formula 
 
+
+### timeline
+
++ 20200421: add exception handle part
+

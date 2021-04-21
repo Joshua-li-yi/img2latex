@@ -15,12 +15,13 @@ import matplotlib.pyplot as plt
 env = os.environ
 
 default_headers = {
-    'app_id': env.get('APP_ID', '你的APP_ID'),
-    'app_key': env.get('APP_KEY', '你的APP_KEY'),
+    'app_id': env.get('APP_ID', '你的APPID'),
+    'app_key': env.get('APP_KEY', '你的APP key'),
     'Content-type': 'application/json'
 }
 
 service = 'https://api.mathpix.com/v3/latex'
+
 
 class Img2Latex(QWidget):
 
@@ -74,7 +75,7 @@ class Img2Latex(QWidget):
         # 排版
         grid.addWidget(self.imgLable, 1, 0, 5, 3)
 
-        grid.addWidget(self.img2latexBtn,6,0,1,2)
+        grid.addWidget(self.img2latexBtn, 6, 0, 1, 2)
 
         grid.addWidget(self.Latex1Edit, 7, 0)
         grid.addWidget(self.Latex1copyBtn, 7, 1)
@@ -102,7 +103,7 @@ class Img2Latex(QWidget):
         self.Latex2copyBtn.clicked.connect(self.copyLatex2)
         self.Latex3copyBtn.clicked.connect(self.copyLatex3)
 
-        # edit latex
+        # edit latex part
         # self.Latex1EditBtn.clicked.connect(self.Latex1EditImg)
         # self.Latex1Edit.textChanged.connect(self.Latex1EditImg)
 
@@ -234,32 +235,51 @@ class Img2Latex(QWidget):
     # Return the base64 encoding of an image with the given filename.
     #
 
-    def image_uri(self,filename):
+    def image_uri(self, filename):
         image_data = open(filename, "rb").read()
         return "data:image/jpg;base64," + base64.b64encode(image_data).decode()
 
     # Call the Mathpix service with the given arguments, headers, and timeout.
-    def latex(self,args, headers=default_headers, timeout=30):
+    def latex(self, args, headers=default_headers, timeout=30):
         r = requests.post(service,
                           data=json.dumps(args), headers=headers, timeout=timeout)
         return json.loads(r.text)
 
-    def convert(self):
-        self.grabclipboard()
-        r = self.latex({
-            'src':self.image_uri(r".\img\equa.png"),
-            'formats': ['latex_simplified']
-        })
-        # print(r['latex_simplified'])
-        latex1 = r['latex_simplified']
+    #
+    # 识别剪贴板公式
+    #
+    def grapclipboard(self):
+        im = ImageGrab.grabclipboard()
+        im.save(r'.\img\equa.png', 'PNG')
+        self.imgLable.setPixmap(PyQt5.QtGui.QPixmap(r'.\img\equa.png'))
+        pass
 
-        # test
-        # latex1='111'
-        latex2 = '$' + latex1 + '$'
-        latex3 = '$$' + latex1 + '$$'
-        self.Latex1Edit.setText(latex1)
-        self.Latex2Edit.setText(latex2)
-        self.Latex3Edit.setText(latex3)
+    #
+    # 为程序添加快捷键
+    #
+
+    def keyPressEvent(self, event):
+        if (event.key() == Qt.Key_T) and (event.modifiers() == Qt.AltModifier):
+            self.convert()
+        if (event.key() == Qt.Key_C) and (event.modifiers() == Qt.AltModifier):
+            self.copyLatex3()
+
+    def convert(self):
+        try:
+            self.grapclipboard()
+            r = self.latex({
+                'src': self.image_uri(r".\img\equa.png"),
+                'formats': ['latex_simplified']
+            })
+            latex1 = r['latex_simplified']
+        except:
+            latex1 = "img 2 latex failed, please retry again!"
+        else:
+            latex2 = '$' + latex1 + '$'
+            latex3 = '$$' + latex1 + '$$'
+            self.Latex1Edit.setText(latex1)
+            self.Latex2Edit.setText(latex2)
+            self.Latex3Edit.setText(latex3)
 
     def copyLatex1(self):
         # get the latex formula
@@ -276,7 +296,7 @@ class Img2Latex(QWidget):
         pyperclip.copy(text)
 
     #
-    # latex to img
+    # latex to img part, have some bugs, if any one is interested can modify this part
     #
 
     # def reviewImg(self,txt):
@@ -302,7 +322,6 @@ class Img2Latex(QWidget):
     #     plt.show()
     #     # show it on reviewImgLabel
     #     self.reviewImgLable.setPixmap(PyQt5.QtGui.QPixmap(r'.\img\reviewLatex.png'))
-
 
     # def Latex1EditImg(self):
     #     text = self.Latex1Edit.text()
@@ -338,23 +357,6 @@ class Img2Latex(QWidget):
     #     else:
     #         self.reviewImgLable.setPixmap(PyQt5.QtGui.QPixmap(r'.\img\error.png'))
 
-    #
-    # 识别剪贴板公式
-    #
-    def grapclipboard(self):
-        im = ImageGrab.grabclipboard()
-        im.save(r'.\img\equa.png', 'PNG')
-        self.imgLable.setPixmap(PyQt5.QtGui.QPixmap(r'.\img\equa.png'))
-
-    #
-    # 为程序添加快捷键
-    #
-
-    def keyPressEvent(self, event):
-        if (event.key() == Qt.Key_T)and(event.modifiers() == Qt.AltModifier):
-            self.convert()
-        if (event.key() == Qt.Key_C)and(event.modifiers() == Qt.AltModifier):
-            self.copyLatex3()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
